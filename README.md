@@ -84,9 +84,7 @@ default => Class accesible within the same package.
 
 ## Abstract(-> Incomplete )  Modifier
 
-Applicable for
-
-1. Methods - Abstract Methods ends with semicolon not with curly bracket; Child classes are reponsible for implementation of the abstract methods.
+1. Applicable for Methods - Abstract Methods ends with semicolon not with curly bracket; Child classes are reponsible for implementation of the abstract methods.
    Valid signature is - `public abstract int getInterstRate();`
 
 ```
@@ -104,11 +102,8 @@ public class Loan{
 
 ```
 
-2. Class - we can declare a class as *abstract* if we feel implementation is incomplete. Like a class implementation can be incomplete or a method can have incomplete implementation.
+2. Applicable for Class - we can declare a class as *abstract* if we feel implementation is incomplete. Like a class implementation can be incomplete or a method can have incomplete implementation.
    Object Creation( Instantation ) is not allowed for Abstract class.
-
-
-
 3. Difference between abstarct method and abstract class:
    If a class has at least one abstract method then class must be declared as Abstract class. So object creation is not possible.
    If a class doesn't have abstract method even though that class can be declared as Abstarct class.
@@ -145,3 +140,246 @@ class AnotherChildTest extends Test {
  public void m2() {};
 }
 ```
+
+5. When an abstract class is required to have abstract method -
+   If you want each child to implement abstract method then please declare a abstract method in parent abstract class.
+
+   ```
+   abstract class Vehicle {
+    public abstract int getNoOfWheels(){
+    };
+   }
+   ```
+
+   If implementation is decision is dependent on child class in that case abstract method declaration is not required in parent abstract class.
+
+   ```
+   abstract class Vehicle {}
+   ```
+
+## Members(methods or variables) Modifiers =>  **public** & **default**
+
+### public**-Global Access & **default**-accessible within it's own package:
+
+if a class is public then it can be accessed from anywhere.
+
+```
+// A.java  => javac -d . A.java
+package pack1;
+
+public class A {
+    void m1() {
+        Sopln("A class method");
+    }
+}
+
+// B.java  => javac -d . B.java
+package pack2;
+import pack1.A;
+
+public class B {
+    public static void main(String args[]) {
+        A a = new A(); // Compile time error will be thrown here
+        a.m1();
+    }
+}
+```
+
+if a class is public but it's member are not public( for example it's default ) then its emeber can be accessed inside it's own package.
+
+```
+// A.java  => javac -d . A.java
+package pack1;
+
+public class A {
+    void m1() {
+        Sopln("A class method");
+    }
+}
+
+// B.java  => javac -d . B.java
+package pack2;
+import pack1.A;
+
+public class B {
+    public static void main(String args[]) {
+        A a = new A();
+        a.m1(); // Compile time error will be thrown here
+    }
+}
+```
+
+if a class is public and it's members are also public then class can be accessed from anywhere.
+
+```
+// A.java  => javac -d . A.java
+package pack1;
+
+public class A {
+    public void m1() {
+        Sopln("A class method");
+    }
+}
+
+// B.java  => javac -d . B.java
+package pack2;
+import pack1.A;
+
+public class B {
+    public static void main(String args[]) {
+        A a = new A();
+        a.m1();
+    }
+}
+```
+
+if a class is not public it can't be accessed from outside it's own package even though it's members are public.
+
+```
+// A.java  => javac -d . A.java
+package pack1;
+
+class A {
+    public void m1() {
+        Sopln("A class method");
+    }
+}
+
+// B.java  => javac -d . B.java
+package pack2;
+import pack1.A;
+
+public class B {
+    public static void main(String args[]) {
+        A a = new A();
+        a.m1();
+    }
+}
+```
+
+### Private ( Accessible within it's own class ):
+
+*Recommended modifier for Class Variables is PRIVATE*
+
+*Recommended modifier for Class Methods is PUBLIC*
+
+Private member(methods & data member/class variables) are accessible within it's own class.
+
+```
+class A {
+    private void m1() {
+        Sopln("A class private method");
+    }
+}
+
+class Test {
+    public static void main(String args[]) {
+        A a = new A();
+        a.m1(); // Compile Time error will be thrown - m1 has private access in A
+    }
+}
+```
+
+```
+class A {
+    private void m1() {
+        Sopln("A class private method");
+    }
+}
+
+public class Test {
+    public static void main(String args[]) {
+        A a = new A();
+        a.m1(); // Compile Time error will be thrown - m1 has private access in A
+    }
+}
+```
+
+### Protected Modifiers( Access within it's own package i.e default + child class level access )
+
+Within it's own package it can be accessed by Parent class reference, Child class reference
+
+```
+
+class A {
+    public void m1() {
+        Sopln("A class method");
+    }
+}
+
+class B extends A {
+    public static void main(String args[]) {
+  
+    }
+}
+
+// Allowed access ways are
+A a = new A();
+a.m1();
+
+B b  = new B();
+b.m1();
+
+// Here B class have access m1 method in A. So using B class reference it can be accessed
+A a1 = new B();
+a1.m1()
+```
+
+##### Inside same package - Accessible by parent class refrence and Child class reference
+
+```
+// Both classes are in same package - pack1, A is parent class and B is Child class.       javac -d . A.java => java pack1.B
+package pack1;
+class A {
+    protected void m1() {
+        Sopln("A class protected method");
+    }
+}
+
+class B extends A {
+    public static void main(String args[]) {
+        A a = new A();
+        a.m1();
+
+        B b = new B();
+        b.m1();
+
+        A a1 = new B();
+        a1.m1();
+    }
+}
+```
+
+###### Outside package - Only within Child Class( by Child class reference only )
+
+What if child class exist outside another Package - pack2
+
+```
+// Class A is in package - pack1, and Class B is in package- pack2
+package pack1;
+
+class A {
+    protected void m1() {
+        Sopln("A class protected method");
+    }
+}
+---------------------------------------------------
+package pack2;
+import pack1.A;
+
+public class B extends A {
+    public static void main(String args[]) {
+        A a = new A(); // Compile Time Error because of Parent refrence - m1 has protected access in pack1.A
+        a.m1();
+
+        B b = new B(); // Valid because of Child refrence is used
+        b.m1();
+
+        A a1 = new B(); // Compile Time Error because of Parent refrence - m1 has protected access in pack1.A
+        a1.m1();
+    }
+}
+```
+
+
+![image.png](assets/image2.png)
