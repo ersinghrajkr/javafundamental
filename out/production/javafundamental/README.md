@@ -779,37 +779,3 @@ if calls does.t match, compile time error will be thrown.
 
 
 #### Overloading(Same method name but different arguments type):
-
-*we can assume Overloading is:* Compiler is responsible for method resolution based on object reference type( for example Test t = new Test() ).
-
-1. Compile Time Polymorphism
-2. Static Polymorphism
-3. Early Binding
-
-```
-class Test {
-    public void m1() {
-       System.out.println("No Args");
-    }
-    public void m1(int i) {
-        System.out.println("int Args");
-    }
-    public void m1(double d) {
-        System.out.println("double Args");
-    }
-
-    public static void main(String[] args) {
-        Test t = new Test();
-        t.m1();
-        t.m1(10);
-        t.m1(10.55);
-    }
-}
-```
-
-
-
-
-----
-
-#### Overriding ( same method signature )
