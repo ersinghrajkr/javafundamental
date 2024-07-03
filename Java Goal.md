@@ -1,8 +1,5 @@
 Java :
 
-9621177524
-8873694500
-
 Variable :
 Array:
 
@@ -42,5 +39,3 @@ Microservice:
 - event driven system
 
 DSA:
-
-9621177524
