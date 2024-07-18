@@ -1,6 +1,31 @@
-# **Java Fundamental**
+# Object Oriented Programming (OOPs) for JAVA Interviews
 
-## Java Source File Structure
+1. Java Source File Structure
+2. Import Statement
+3. Package Statement
+4. Class Level Modifiers
+5. Abstract Method
+6. Abstract class
+7. Member Modifiers
+8. Interfaces
+9. Data Hiding
+10. Abstraction
+11. Encapsulation
+12. Tightly Encapsulated Class
+13. Inheritance
+14. Importance of Inheritance
+15. Types of Inheritance
+16. Multiple Inheritance
+17. Cyclic Inheritance
+18. Method Signature
+19. Overloading
+20. Method Overriding
+21. Method Hiding
+22. Polymorphism
+23. Object Typecasting
+24. Constructors
+
+### Java Source File Structure
 
 #### Public Class In a File
 
@@ -551,7 +576,6 @@ class C extends B {
 2. Code Reusability
 3. extends keyword
 
-
 Child class member cannot be part of Parent Class
 
 All member of parent class will be available in child class
@@ -561,7 +585,6 @@ Parent reference can be used to hold child object. But using parent reference we
 Child reference can be used to hold child object. Child reference can call Parent class members
 
 Parent reference can be used to hold child object. But using parent reference we can't call Child class members
-
 
 Example-1
 
@@ -607,7 +630,6 @@ class Test {
 }
 ```
 
-
 Note - 4300+ class are available in Java
 
 1. Object class is the root class for all the classes in Java.
@@ -626,10 +648,9 @@ Example -
 // Class A inherits Object class
 Object => class A
 
-// only class A inherits Object class but not B
+// only class A inherits Object class but not B.
 
 class B extends A
-
 
 #### Types of Inheritance:
 
@@ -710,7 +731,6 @@ class C extends Parent{
 }
 ```
 
-
 **Hybrid Inheritance**
 
 ```
@@ -767,16 +787,12 @@ class D implements C {
 }
 ```
 
-
 ### Polymorphism ( Overloading -*is different method signature* & Overriding is - *same method signature* ):
 
-**Method Signature** => ( Method name + Method Arguments ), not method return type. Compiler uses methods signature to resolve calls. 
+**Method Signature** => ( Method name + Method Arguments ), not method return type. Compiler uses methods signature to resolve calls.
 if calls does.t match, compile time error will be thrown.
 
-
 *Two methods with same signature is not allowed in a class.*
-
-
 
 #### Overloading(Same method name but different arguments type):
 
@@ -786,30 +802,789 @@ if calls does.t match, compile time error will be thrown.
 2. Static Polymorphism
 3. Early Binding
 
+   ```
+   class Test {
+       public void m1() {
+           System.out.println("No Args");
+       }
+       public void m1(int i) {
+           System.out.println("int Args");
+       }
+       public void m1(double d) {
+           System.out.println("double Args");
+       }
+
+       public static void main(String[] args) {
+           Test t = new Test();
+           t.m1();
+           t.m1(10);
+           t.m1(10.55);
+       }
+   }
+
+   ```
+
+**Case Study - 1**
+![image.png](assets/imagePromotion.png)
+
 ```
 class Test {
-    public void m1() {
-       System.out.println("No Args");
-    }
     public void m1(int i) {
-        System.out.println("int Args");
+        System.out.println("int Args Method");
     }
-    public void m1(double d) {
-        System.out.println("double Args");
+    public void m1(float d) {
+        System.out.println("float Args Method");
     }
 
     public static void main(String[] args) {
         Test t = new Test();
-        t.m1();
-        t.m1(10);
-        t.m1(10.55);
+        t.m1(10); // int Args Method
+        t.m1(10.55f); // float Args Method
+
+        // In overloading If exact method signature is not available then Compile time error won't be thrown here. Instead char will be promoted to next level i.e int. 
+        // So, it will try to find matching method, i.e int args method exist it will get chance first. if it doesn't find, it keeps promoting till double. 
+        // If matching method not found for last promotion i.e double then only compile time error will be thrown
+        t.m1('a'); // int Args Method
+        // long can be promoted to float
+        t.m1(10l); // float Args Method
+        // double promotion for next level is not applicable.
+        t.m1(10.5); // Compile Time Error
+  
     }
 }
 ```
 
+**Case Study - 2**
+
+```
+class Test {
+    public void m1(Object o) {
+        System.out.println("Object version");
+    }
+    public void m1(String s) {
+        System.out.println("String version");
+    }
 
 
+    public static void main(String[] args) {
+        Test t = new Test();
+        t.m1(new Object()); // Object version
+        t.m1("Raj"); // String version
 
-----
+        // Because String is direct child class of Object. Always child get's priority first and then Parent class
+        // If String version doesn't exist then Object version will be called
+        t.m1(null); // String version
 
-#### Overriding ( same method signature )
+    }
+}
+
+```
+
+**Case Study - 3**
+
+![image.png](assets/imageSSB.png)
+
+```
+class Test {
+    public void m1(String s) {
+        System.out.println("String version");
+    }
+    public void m1(StringBuffer sb) {
+        System.out.println("StringBuffer version");
+    }
+  
+    public static void main(String[] args) {
+        Test t = new Test();
+        t.m1("Raj"); // String version
+        t.m1(new StringBuffer("Raj")); // StringBuffer version
+
+        // Ambiguous method call. Because String and StringBuffer are direct child of Object class
+        // Candidates for method call t.m1(null) are: String and StringBuffer. So, compiler time error will be thrown.
+        t.m1(null);
+    }
+}
+
+```
+
+**Case Study - 4** : ( defined arg method **>** var args method . if no matched args method matched then var-args-method will get chance)
+
+```
+class Test {
+    public void m1(int i) {
+        System.out.println("General method");
+    }
+    public void m1(int... i) {
+        System.out.println("var arg method");
+    }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        // var arg int method will be call because it can accept min 0 args.
+        t.m1(); // var arg int method
+        t.m1(2,3); // var arg method
+
+        // Both overloaded is eligible for single int arg. So, Old concept will get priority compared to new concept( var args came in 1.5 version)
+        // So, General method will get priority
+        t.m1(2); // General method
+    }
+}
+```
+
+**Case Study - 5**
+
+```
+class Test {
+    //Same method with Change in argument order will be considered as overloaded method
+    public void m1(int i, float f) {
+        System.out.println("int-float version");
+    }
+    public void m1(float f, int i) {
+        System.out.println("float-int version");
+    }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        // Here exact match will get chance
+        t.m1(10, 20.5f); // int-float version
+        t.m1(10.f, 20); // float-int version
+  
+        // Compile Time Error - Reference to t.m1 is ambiguous. Because
+        t.m1(10, 10); //Both method matched.So, CompileTime Error
+  
+        // No method matched. So, CompileTime will be thrown
+        t.m1(10.5f, 10.5f); //CompileTime Error
+    }
+}
+```
+
+**Case Study - 6**
+
+At compile time left side -> Class Type Reference is taken into consideration for method resolution. That's why overloading is called Compile Time polumorphism
+
+- Same class type can hold the instance of Same class ( ex- Animal a = new Animal() or Monkey m = new Monkey(); );
+- Parent class type can hold the reference of Child class (ex- Animal a = new Monkey(); )
+- Parent/Ancestor/Root class can hold the reference of child class or indirect child class at any level( ex- Object o = new Animal(); or Object o = new Monkey(); ).
+- Child class type can't hold the reference of Parent/Root/Ancestor class Instance( for ex - Monkey m1 = new Animal(); ) .
+
+```
+class Animal { }
+
+class Monkey extends Animal { }
+
+class Test {
+
+    public void m1(Animal a) {
+        System.out.println("Animal Version");
+    }
+
+    public void m1(Monkey m) {
+        System.out.println("Monkey Version");
+    }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+
+        Animal a = new Animal();
+        t.m1(a); // Animal Version
+
+        Monkey m = new Monkey();
+        t.m1(m); // Monkey Version
+
+        // Animal a1 is going to reference to Animal Version because for Overloading is done at compile time. It doesn't care about runtime
+        Animal a1 = new Monkey();
+        t.m1(a1); // Animal Version
+
+        // Same class Type or it's ancestor parent can hold the instance.
+        Monkey m1 = new Animal(); // CE
+        t.m1(m1);
+
+        // Same class Type or it's ancestor Class( Object, Animal but not Monkey )  can hold the instance.
+        Object o = new Animal(); // 
+    }
+}
+```
+
+#### **Overriding ( same method signature )**
+
+At compile time left side -> Class Type Reference is taken into consideration for method resolution of parent and child class for overriding.
+But runtime object/instance of class
+
+- Runtime Polymorphism
+- Dynamic Polymorphism
+- Late Binding
+
+Overriden Method - ( Parent class method which has been overriden by child class)
+
+Overriding Method- ( Child class method which overrid by child class)
+
+###### *Runtime Object method will be invoked for Overriding. But for compile time (i.e for overloading) Class Type reference will be used to resolve the reference.*
+
+```
+class Parent {
+    public void property() {
+        System.out.println("Gold, Silver, Money, Land");
+    }
+
+    // Overriden Method
+    public void arrangeMarriage() {
+        System.out.println("Arrange Marriage with Anupama Parameswaran");
+    }
+}
+
+class Child extends Parent {
+    // Overriding Method
+    public void arrangeMarriage() {
+        System.out.println("Arrange Marriage with Tamannaah Bhatia");
+    }
+}
+
+class Test {
+
+    public static void main(String[] args) {
+
+        Parent p = new Parent(); // Runtime is Parent, so parent method will be invoked
+        p.arrangeMarriage(); // Parent method
+
+        Child c = new Child(); //Runtime is Child, so Child method will be invoked
+        c.arrangeMarriage(); //Child method
+
+        Parent p1 = new Child(); //Runtime is Child, so Child method will be invoked
+        p1.arrangeMarriage(); // Child method
+
+        // Child c1 = new Parent(); // incompatible types: Parent cannot be converted to Child
+    }
+}
+```
+
+##### Rules of Method Overriding:
+
+##### - Mthod signature must be same( Name + Arguments types )
+
+Same Return Types:
+
+```
+class Parent {
+    public Object m1() {
+        return null;
+    }
+}
+
+class Child extends Parent {
+    /**
+     * Same return types are always allowed
+     * @return
+     */
+    public Object m1() {
+        return null;
+    }
+}
+```
+
+##### - Return Type( Must be Same until 1.4v, 1.5v onwards co-variants return types are allowed )
+
+**Co-variant Return Types:** The **covariant return type is – when we override a method – what allows the return type to be the subtype of the type of the overridden method**.
+
+Covariant types are direct or Indirect child of Parent Return types. For example here parent class method return type is Object, so child class method can have same retrun type
+
+//Allowed
+
+Parent Method Return Type => Object
+Child Method Return Type => Object|String|StringBuffer|etc.
+
+//Allowed
+
+Parent Method Return Type => Number
+Child Method Return Type => Number|Byte|Short|Integer|Long|Float|Double.
+
+//Allowed
+
+Parent Method Return Type => Number
+Child Method Return Type => Number|Byte|Short|Integer|Long|Float|Double.
+
+// Not allowed
+
+Parent Method Return Type => String
+Child Method Return Type => Object
+
+Same or it's child class are allowed for child override method
+
+C:/javac Parent.java
+
+*Compile with Java 1.4 version*
+
+C:/javac -source 1.4 Parent.java
+
+```
+class Parent {
+    public Object m1() {
+        return null;
+    }
+}
+
+class Child extends Parent {
+    /**
+     * Object child are allowed here as return type. For example - String, StringBuffer, int, etc
+     * @return
+     */
+    public Object m1() {
+        return null;
+    }
+}
+```
+
+- Private methods are not visible in child classes. Hence Overriding concept is not applicable for Private methods.
+
+  ```
+  class Parent {
+      private void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+
+      // Overriding is not possible, but we can have same method in child class
+      private void m1() {
+
+      }
+  }
+  ```
+- Override is not allowed for Final methods. Compile time error will be thrown if override is done.
+
+  ```
+  class Parent {
+      public final void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+
+      // final methods are not allowed to override. Even child class can't have same method as final. Compile time error will be thrown
+      public void m1() {
+
+      }
+  }
+
+  ```
+
+  **Parent Methods  ================================================> Child Methods**
+  final           ================================================> non-final/final    Not Allowed
+  non-final       ================================================> final              Allowed
+  abstract        ================================================> non-abstract       Allowed
+  non-abstract    ================================================> abstract           Allowed( Child class will become abstract class. Next child class has to implement abstract method )
+  synchronized    ================================================> non-synchronized   Allowed
+  native          ================================================> non-native         Allowed
+  strictfp        ================================================> non-strictfp       Allowed
+- While overriding we can't narrow/reduce the scope of the access modifier. But we can brod/increase the scope.
+
+  ```
+
+  class Parent {
+      public void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+
+      // Compile Time Error. Attempting to assign weaker access privileges
+      protected void m1() {
+
+      }
+  }
+  ```
+
+  ```
+  class Parent {
+      protected void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+
+      // Broadening of access modifiers are allowed, protected to public done here
+      public void m1() {
+
+      }
+  }
+  ```
+
+private < default < protected < public
+
+- OVERRIDING RULES ( Unchecked Exception is not caught by Compiler. Except Unchecked all are Checked Exception )
+
+  ![image.png](assets/imageUncheckedChecked.png)
+
+  - **If child class method throws any Checked Exception then compulsory Parent class method or it's Child class should throw the same checked exception.
+    There are no rule for UNCHECKED EXCEPTION**
+
+    1. It's Valid, if child method doesn't throw Exception
+       Parent - public void m1() throws Exception
+       Child - public void m1(){ }
+
+       ```
+       class Parent {
+           protected void m1() throws Exception {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() {
+
+           }
+       }
+
+       ```
+    2. It's Invalid. If child method throws checked Exception then it's Parent method must throws Checked Exception or it's Parent Checked Exception
+       Parent - public void m1()
+       Child - public void m1() throws Exception
+
+       ```
+       class Parent {
+           protected void m1() {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws Exception {
+
+           }
+       }
+       ```
+    3. It's valid. Because parent method is throwing checked Parent Exception class and child method throws checked child Exception class.
+       Parent - public void m1() throws Exception
+       Child - public void m1() throws IOException
+
+       ```
+       import java.io.IOException;
+
+       class Parent {
+           protected void m1() throws Exception {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws IOException {
+
+           }
+       }
+
+       ```
+    4. It's Invalid. Because parent method is throwing checked Child Exception class and child method throws checked Parent Exception class.
+       Parent - public void m1() throws IOException
+       Child - public void m1() throws Exception
+
+       ```
+       import java.io.IOException;
+
+       class Parent {
+           protected void m1() throws IOException {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws Exception {
+
+           }
+       }
+       ```
+    5. It's valid. Because EoFException, FNFE are checked child Exception class of IOException.
+       Parent - public void m1() throws IOException
+       Child - public void m1() throws EoFException, FNFE
+
+       ```
+       import java.io.EOFException;
+       import java.io.FileNotFoundException;
+       import java.io.IOException;
+
+       class Parent {
+           protected void m1() throws IOException {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws EOFException, FileNotFoundException {
+
+           }
+       }
+       ```
+    6. It's Invalid. Because Interrupted Exception is not child Exception of IOException( overridden method does not throw 'java.lang.InterruptedException )
+       Parent - public void m1() throws IOException
+       Child - public void m1() throws EoFException, IE
+
+       ```
+       import java.io.EOFException;
+       import java.io.IOException;
+
+       class Parent {
+           protected void m1() throws IOException {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws EOFException, InterruptedException {
+
+           }
+       }
+
+
+       ```
+    7. It's Valid.Because EoFException is child class of IOException. NPE is unchecked exception so it can be placed/thrown anywhere in class.
+       Parent - public void m1() throws IOException
+       Child - public void m1() throws EoFException, NPE
+
+       ```
+       import java.io.EOFException;
+       import java.io.IOException;
+
+       class Parent {
+           protected void m1() throws IOException {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws EOFException, NullPointerException {
+
+           }
+       }
+       ```
+    8. It's valid. Because parent method throws IOException and child throws unchecked exception AE, NPE
+       Parent - public void m1() throws IOException
+       Child - public void m1() throws AE,NPE
+
+       ```
+       import java.io.EOFException;
+       import java.io.IOException;
+
+       class Parent {
+           protected void m1() throws IOException {
+
+           }
+       }
+
+       class Child extends Parent {
+
+           public void m1() throws EOFException, ArithmeticException ,NullPointerException {
+
+           }
+       }
+       ```
+- Ovrriding w.r.t Static Methods( Class level methods can be overriden by Class level i.e static method, Object level method can be overriden by Object level Method i.e non-static )
+
+  ```
+  class Parent {
+      public void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+
+      // Overriding method must be non-static too( Static method 'm1()' in 'Child' cannot override instance method 'm1()' in 'Parent')
+      public static void m1() {
+
+      }
+  }
+  ```
+
+  ```
+  class Parent {
+      public static void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+
+      // Overriding method must be static too( Instance method 'm1()' in 'Child' cannot override static method 'm1()' in 'Parent)
+      public void m1() {
+
+      }
+  }
+  ```
+
+  ```
+  // Below is the concept of Method hiding. It's not overriding
+  class Parent {
+      public static void m1() {
+
+      }
+  }
+
+  class Child extends Parent {
+      public static void m1() {
+
+      }
+  }
+  ```
+- #### Method Hiding( Method hiding is taken care by Compiler and Overriding by Runtime-JVM)
+
+```
+// Method hiding will be taken care by Compiler. Below is not overriding
+class Parent {
+    public static void m1() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    public static void m1() {
+        System.out.println("Child");
+    }
+}
+
+class Test {
+    public static void main(String[] args) {
+        Parent p = new Parent();
+        p.m1(); // Runtime instance is Parent Object.Hence Parent method will be invoked
+
+        Child c = new Child();
+        c.m1(); // Runtime instance is Child Object.Hence Child method will be invoked
+
+        Parent parent = new Child();
+        parent.m1(); // Runtime instance is Child Object.Hence Child method will be invoked
+    }
+}
+```
+
+##### Difference b/w Method Hiding and Overriding:
+
+- **Method Hiding** -
+  1. Both Parent class and child class method should be static.
+  2. Method Resolution always taken care by compiler based on reference type
+  3. Method hiding is a Compile Time Polymorphism or Static Polumorphism or Early Binding.
+- **Overriding** -
+  1. Both Parent class and child class methods should be non-static.
+  2. Method Resolution always taken care by JVM based on Runtime Object.
+  3. Overriding is Runtime Polymorphism or Dynamic Polymorphism or Late Binding.
+
+##### Overriding w.r.t var-arg method( var-arg method can be override only by var-arg method, otherwise it will become Ovverloading ):
+
+Overriding -  For overriding parent and child methods must have var-arg method
+
+```
+// Below is overriding because method argument are same
+class Parent {
+    // Var-Arg method
+    public static void m1(int... i) {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    // Var-Arg method. Hence it's overriding. So method resolution will be taken care by runtime/JVM 
+    public static void m1(int... i) {
+        System.out.println("Child");
+    }
+}
+
+class Test {
+    public static void main(String[] args) {
+        Parent p = new Parent();
+        p.m1(10); //Runtime instance is Parent Object.Hence Parent method will be invoked
+
+        Child c = new Child();
+        c.m1(10); // Runtime instance is Child Object.Hence Child method will be invoked
+
+        Parent parent = new Child();
+        parent.m1(10); // Runtime instance is Child Object.Hence Child method will be invoked
+    }
+}
+```
+
+Overloading:
+
+```
+// Method hiding will be taken care by Compiler. Below is not overriding because method argument are different so it's Overloading
+class Parent {
+    // Var-Arg method
+    public static void m1(int... i) {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    // Normal method. Hence it's Overloading not overriding. So method resolution will be taken care by compiler with reference type
+    public static void m1(int i) {
+        System.out.println("Child");
+    }
+}
+
+class Test {
+    public static void main(String[] args) {
+        Parent p = new Parent();
+        p.m1(10); //Reference type is Parent.So Parent method will be invoked
+
+        Child c = new Child();
+        c.m1(10); // Reference type is Child.So Child method will be invoked
+
+        Parent parent = new Child();
+        parent.m1(10); // Reference type is Parent.So Parent method will be invoked
+    }
+}
+```
+
+#### Overriding concept is only applicable for methods not variables:
+
+Variables resolution is always taken care by Compiler based on reference type whether Parent/Child variable is static or non-static.
+
+Declaring same variable in parent and child class is known as **Variable Hiding or Shadowing**
+
+```
+// Variables resolution is always taken care by Compiler based on reference type whether variable is static or non-static.
+class Parent {
+    String s = "Parent";
+}
+
+class Child extends Parent {
+    String c = "Child";
+}
+
+class Test {
+    public static void main(String[] args) {
+        Parent p = new Parent();
+        System.out.println(p.s); // Reference type is Parent.So Parent variable will be invoked
+
+
+        Child c = new Child();
+        System.out.println(c.s); // Reference type is Child.So Child variable will be invoked
+
+        Parent parent = new Child();
+        System.out.println(parent.s); // Reference type is Parent.So Parent variable will be invoked
+    }
+}
+```
+
+#### Comparision between Overriding and Overloading
+
+Property ----------------- -----------Overloading------------------------------------------Overriding.............................
+
+Method Names--------------------------Must be Same ----------------------------------------Must be Same............................
+
+Argument Types------------------------Must be Different(At leat Order) ------------------- Must be Same(Including Order)...........
+
+private/final/static METHODS.........Can be Overloaded.....................................Can't be Overridden(Not applicable).....
+
+Return Types.........................No Restrictions.......................................Must be Same(Upto 1.4v), Co-varient Return Type is allowed(1.5v onwards)
+
+Throws clause........................No Restrictions......................If child class throws checked-excepion then it's parent class method should throw same checked-exception or parent
+
+Method Resolution....................Taken care by Compiler Based on Reference Type ............JVM based on Runtime Instance/Object...
+
+Other Name..............Compile Time Polymorphism /Static Polymorphism/Early Binding................Runtime Time Polymorphism /Dynamic Polymorphism/Late Binding
