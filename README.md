@@ -1588,3 +1588,74 @@ Throws clause........................No Restrictions......................If chi
 Method Resolution....................Taken care by Compiler Based on Reference Type ............JVM based on Runtime Instance/Object...
 
 Other Name..............Compile Time Polymorphism /Static Polymorphism/Early Binding................Runtime Time Polymorphism /Dynamic Polymorphism/Late Binding
+
+### Polymorphism Summary:
+
+Poly means Many
+
+Morphs means forms
+
+Overloading - Same method name with different argument type
+
+Overriding - Same method with multiple implementations
+
+Types of Polymorphism -
+
+1. Static/Compile Time / Early Binding               ------------Overloading  + Method Hiding
+2. Dynamic / Runtime / Late Binding                  ----------- Overriding
+
+## 3 Pillers of OOPs:
+
+1. Encapsulation - Talks about secutity
+2. Inheritance - Talks about Reusability
+3. Polymorphism - Talks about Flexibility( same method name with diff args/ Same method with diff implementation / Same refrence Type/ Same Instance Type etc )
+
+## Object Type Casting => A b  (C) d;
+
+1. Compile Time Cheking - The type of "d" and "C" must have some relation. Either child to parent or parent to child or Same type. Otherwise Compile Time Error will be thrown.
+2. bb
+
+### Reference casting
+
+
+#### Incompatible type casting
+
+#### Subclass to superclass (upcasting)
+
+#### Superclass to subclass (downcasting)
+
+## Wrapper classes
+
+A **wrapper class** in Java converts a primitive data type into a class object.
+
+Java is an object-oriented language that only supports pass by value. Therefore, wrapper class objects allow us to change the original passed value. These wrapper classes help with multithreading and synchronization because, in Java, multithreading only works with objects. Moreover, most collections (like `Vector`, `LinkedList`, etc.) work with objects.
+
+![image.png](assets/imagePrimitive.png)
+
+### Autoboxing
+
+The automatic conversion of primitive data types into its wrapper class objects is known as `autoboxing`:
+
+```Java
+class Autoboxing {
+    public static void main( String args[] ) {
+     int a = 15; // Primitive data type
+     Integer I = a; // Autoboxing will occur internally.
+    }
+}
+```
+
+### Unboxing
+
+The automatic conversion of wrapper class objects into its primitive data types is known as `unboxing`.
+
+```Java
+class Autoboxing {
+    public static void main( String args[] ) {
+      Integer a = new Integer(15); // Wrapper class object
+      int I = a;// Unboxing will occur internally.
+    }
+}
+```
+
+## Constructor:
